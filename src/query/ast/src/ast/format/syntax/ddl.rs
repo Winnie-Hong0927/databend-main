@@ -30,6 +30,7 @@ use crate::ast::CreateTableSource;
 use crate::ast::CreateTableStmt;
 use crate::ast::CreateViewStmt;
 use crate::ast::TimeTravelPoint;
+use crate::ast::CreateDictionaryStmt;
 
 pub(crate) fn pretty_create_table(stmt: CreateTableStmt) -> RcDoc<'static> {
     RcDoc::text("CREATE")
@@ -411,3 +412,37 @@ pub(crate) fn pretty_create_stream(stmt: CreateStreamStmt) -> RcDoc<'static> {
             RcDoc::nil()
         })
 }
+
+pub(crate) fn pretty_create_dictionary(stmt: CreateDictionaryStmt) -> RcDoc<'static> {
+    RcDoc::text("CREATE")
+        .append(if let CreateOption::CreateOrReplace = stmt.create_option {
+            RcDoc::space().append(RcDoc::text("OR REPLACE"))
+        } else {
+            RcDoc::nil()
+        })
+        .append(RcDoc::space().append(RcDoc::text("DICTIONARY")))
+        .append(match stmt.create_option {
+            CreateOption::Create => RcDoc::nil(),
+            CreateOption::CreateIfNotExists => RcDoc::space().append(RcDoc::text("IF NOT EXISTS")),
+            CreateOption::CreateOrReplace => RcDoc::nil(),
+        })
+        .append(RcDoc::space().append(RcDoc::text(stmt.dictionary_name.to_string())))
+        //中间应该还差一个 pub columns: Vec<ColumnDefinition>,的写入，这个具体实现在想想
+        //.append(
+        //     interweave_comma(
+        //         stmt.columns
+        //             .iter()
+        //             .map(|column| RcDoc::text(column.to_string())),
+        //     )
+        //     .group(),
+        // )//感觉不太对
+        //还有剩下的几个字段再好好想想
+        // .append(if !stmt.primary_keys.is_empty()) {
+        //     RcDoc::line()
+        //         .append(RcDoc::text("PRIMARY KEY "))
+        //         .append(parenthesized(
+        //             interweave_comma(stmt.primary_keys.into_iter().map(f)).group(),
+        //         ))
+        // }
+}
+

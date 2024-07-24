@@ -143,6 +143,18 @@ impl<'ast> Visitor<'ast> for AstFormatVisitor {
         self.children.push(node);
     }
 
+    fn visit_dictionary_ref(
+        &mut self,
+        dictionary_name: &'ast Identifier,
+    ){
+        let mut name = String::new();
+        name.push_str("DictionaryIdentifier ");
+        name.push_str(&dictionary_name.to_string());
+        let format_ctx = AstFormatContext::new(name);
+        let node = FormatTreeNode::new(format_ctx);
+        self.children.push(node);
+    }
+
     fn visit_column_ref(
         &mut self,
         _span: Span,
@@ -1747,6 +1759,29 @@ impl<'ast> Visitor<'ast> for AstFormatVisitor {
         let format_ctx = AstFormatContext::with_children(name, 1);
         let node = FormatTreeNode::with_children(format_ctx, vec![child]);
         self.children.push(node);
+    }
+    //加上一系列对dictionary的操作
+    fn visit_create_dictionary(&mut self, stmt: &'ast CreateDictionaryStmt) {
+        
+    }
+    fn visit_drop_dictionary(&mut self, stmt: &'ast DropDictionaryStmt){
+        self.visit_dictionary_ref(&stmt.dictionary_name);
+        let child = self.children.pop().unwrap();
+        let name = "DropDictionary".to_string();
+        let format_ctx = AstFormatContext::with_children(name, 1);
+        let node = FormatTreeNode::with_children(format_ctx, vec![child]);
+        self.children.push(node);
+    }
+    fn visit_show_create_dictionary(&mut self, _stmt: &'ast ShowCreateDictionaryStmt) {
+        self.visit_dictionary_ref(&_stmt.dictionary_name);
+        let child = self.children.pop().unwrap();
+        let name = "ShowCreateDictionary".to_string();
+        let format_ctx = AstFormatContext::with_children(name, 1);
+        let node = FormatTreeNode::with_children(format_ctx, vec![child]);
+        self.children.push(node);
+    }
+    fn visit_show_dictionaries(&mut self, _show_options: &'ast Option<ShowOptions>) {
+        self.visit_show_options(_show_options, "ShowDictionaries".to_string());
     }
 
     fn visit_create_view(&mut self, stmt: &'ast CreateViewStmt) {
