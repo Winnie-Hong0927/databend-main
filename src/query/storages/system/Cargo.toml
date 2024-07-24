@@ -1,0 +1,60 @@
+[package]
+name = "databend-common-storages-system"
+version = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+publish = { workspace = true }
+edition = { workspace = true }
+
+[lib]
+doctest = false
+test = true
+
+[dependencies]
+async-backtrace = { workspace = true }
+async-trait = { workspace = true }
+chrono = { workspace = true }
+chrono-tz = { workspace = true }
+databend-common-ast = { workspace = true }
+databend-common-base = { workspace = true }
+databend-common-catalog = { workspace = true }
+databend-common-cloud-control = { workspace = true }
+databend-common-config = { workspace = true }
+databend-common-exception = { workspace = true }
+databend-common-expression = { workspace = true }
+databend-common-functions = { workspace = true }
+databend-common-meta-api = { workspace = true }
+databend-common-meta-app = { workspace = true }
+databend-common-meta-types = { workspace = true }
+databend-common-metrics = { workspace = true }
+databend-common-pipeline-core = { workspace = true }
+databend-common-pipeline-sources = { workspace = true }
+databend-common-sql = { workspace = true }
+databend-common-storage = { workspace = true }
+databend-common-storages-fuse = { workspace = true }
+databend-common-storages-result-cache = { workspace = true }
+databend-common-storages-stream = { workspace = true }
+databend-common-storages-view = { workspace = true }
+databend-common-users = { workspace = true }
+databend-storages-common-cache = { workspace = true }
+databend-storages-common-cache-manager = { workspace = true }
+futures = { workspace = true }
+itertools = { workspace = true }
+jsonb = { workspace = true }
+log = { workspace = true }
+once_cell = { workspace = true }
+opendal = { workspace = true }
+parking_lot = { workspace = true }
+regex = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+serde_repr = "0.1.9"
+snailquote = "0.3.1"
+tikv-jemalloc-ctl = { workspace = true }
+typetag = { workspace = true }
+
+[build-dependencies]
+databend-common-building = { workspace = true }
+
+[lints]
+workspace = true

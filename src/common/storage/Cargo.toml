@@ -1,0 +1,41 @@
+[package]
+name = "databend-common-storage"
+version = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+publish = { workspace = true }
+edition = { workspace = true }
+
+[features]
+storage-hdfs = ["databend-common-meta-app/storage-hdfs"]
+
+[dependencies]
+anyhow = { workspace = true }
+arrow-schema = { workspace = true }
+async-backtrace = { workspace = true }
+chrono = { workspace = true }
+dashmap = { workspace = true, features = ["serde"] }
+databend-common-arrow = { workspace = true }
+databend-common-auth = { workspace = true }
+databend-common-base = { workspace = true }
+databend-common-exception = { workspace = true }
+databend-common-expression = { workspace = true }
+databend-common-meta-app = { workspace = true }
+databend-enterprise-storage-encryption = { workspace = true }
+flagset = "0.4"
+futures = { workspace = true }
+log = { workspace = true }
+opendal = { workspace = true }
+ordered-float = { workspace = true }
+parquet = { workspace = true }
+prometheus-client = { workspace = true }
+regex = { workspace = true }
+reqwest = { workspace = true }
+reqwest-hickory-resolver = { workspace = true }
+serde = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+
+[lints]
+workspace = true

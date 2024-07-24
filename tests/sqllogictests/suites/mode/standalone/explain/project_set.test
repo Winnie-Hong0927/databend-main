@@ -1,0 +1,135 @@
+statement ok
+use default;
+
+statement ok
+drop table if exists fold_count;
+
+statement ok
+create table fold_count(id array(int), c1 string);
+
+statement ok
+insert into fold_count values([1,2,3,4], 'x');
+
+query T
+explain select count() from (select unnest(id), c1 from fold_count)
+----
+AggregateFinal
+├── output columns: [count() (#4)]
+├── group by: []
+├── aggregate functions: [count()]
+├── estimated rows: 1.00
+└── AggregatePartial
+    ├── group by: []
+    ├── aggregate functions: [count()]
+    ├── estimated rows: 1.00
+    └── ProjectSet
+        ├── output columns: [unnest (#2)]
+        ├── estimated rows: 1.00
+        ├── set returning functions: unnest(fold_count.id (#0))
+        └── TableScan
+            ├── table: default.default.fold_count
+            ├── output columns: [id (#0)]
+            ├── read rows: 1
+            ├── read size: < 1 KiB
+            ├── partitions total: 1
+            ├── partitions scanned: 1
+            ├── pruning stats: [segments: <range pruning: 1 to 1>, blocks: <range pruning: 1 to 1>]
+            ├── push downs: [filters: [], limit: NONE]
+            └── estimated rows: 1.00
+
+statement ok
+drop table fold_count;
+
+statement ok
+drop database if exists project_set
+
+statement ok
+create database project_set
+
+statement ok
+use project_set
+
+query T
+explain select number from (select unnest([1,2,3]), number from numbers(10)) t
+----
+ProjectSet
+├── output columns: [numbers.number (#0), unnest (#1)]
+├── estimated rows: 10.00
+├── set returning functions: unnest([1, 2, 3])
+└── TableScan
+    ├── table: default.system.numbers
+    ├── output columns: [number (#0)]
+    ├── read rows: 10
+    ├── read size: < 1 KiB
+    ├── partitions total: 1
+    ├── partitions scanned: 1
+    ├── push downs: [filters: [], limit: NONE]
+    └── estimated rows: 10.00
+
+query T
+explain select number from (select unnest([1,2,3,number]), number from numbers(10)) t
+----
+ProjectSet
+├── output columns: [numbers.number (#0), unnest (#1)]
+├── estimated rows: 10.00
+├── set returning functions: unnest(CAST(array(1, 2, 3, numbers.number (#0)) AS Array(UInt64 NULL)))
+└── TableScan
+    ├── table: default.system.numbers
+    ├── output columns: [number (#0)]
+    ├── read rows: 10
+    ├── read size: < 1 KiB
+    ├── partitions total: 1
+    ├── partitions scanned: 1
+    ├── push downs: [filters: [], limit: NONE]
+    └── estimated rows: 10.00
+
+statement ok
+drop table if exists t;
+
+statement ok
+create table t(a int, b variant);
+
+query T
+EXPLAIN SELECT t.a, f.seq, f.value FROM t, LATERAL FLATTEN(input => t.b) f
+----
+EvalScalar
+├── output columns: [t.a (#0), seq (#3), value (#7)]
+├── expressions: [get(1)(flatten (#2)), get(5)(flatten (#2))]
+├── estimated rows: 0.00
+└── ProjectSet
+    ├── output columns: [t.a (#0), flatten (#2)]
+    ├── estimated rows: 0.00
+    ├── set returning functions: flatten(1, 5)(t.b (#1))
+    └── TableScan
+        ├── table: default.project_set.t
+        ├── output columns: [a (#0), b (#1)]
+        ├── read rows: 0
+        ├── read size: 0
+        ├── partitions total: 0
+        ├── partitions scanned: 0
+        ├── push downs: [filters: [], limit: NONE]
+        └── estimated rows: 0.00
+
+query T
+EXPLAIN SELECT json_each(t.b), unnest(t.b) FROM t
+----
+EvalScalar
+├── output columns: [json_each (#2), unnest(t.b) (#4)]
+├── expressions: [get(1)(unnest (#3))]
+├── estimated rows: 0.00
+└── ProjectSet
+    ├── output columns: [json_each (#2), unnest (#3)]
+    ├── estimated rows: 0.00
+    ├── set returning functions: json_each(t.b (#1)), unnest(t.b (#1))
+    └── TableScan
+        ├── table: default.project_set.t
+        ├── output columns: [b (#1)]
+        ├── read rows: 0
+        ├── read size: 0
+        ├── partitions total: 0
+        ├── partitions scanned: 0
+        ├── push downs: [filters: [], limit: NONE]
+        └── estimated rows: 0.00
+
+statement ok
+drop database project_set

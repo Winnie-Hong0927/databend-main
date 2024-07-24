@@ -1,0 +1,22 @@
+[package]
+name = "databend-storages-common-blocks"
+version = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+publish = { workspace = true }
+edition = { workspace = true }
+
+[lib]
+doctest = false
+test = true
+
+[dependencies]
+databend-common-exception = { workspace = true }
+databend-common-expression = { workspace = true }
+databend-storages-common-table-meta = { workspace = true }
+parquet = { workspace = true }
+
+[build-dependencies]
+
+[lints]
+workspace = true

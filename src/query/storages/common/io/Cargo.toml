@@ -1,0 +1,19 @@
+[package]
+name = "databend-storages-common-io"
+version = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+publish = { workspace = true }
+edition = { workspace = true }
+
+[dependencies]
+async-backtrace = { workspace = true }
+databend-common-base = { workspace = true }
+databend-common-catalog = { workspace = true }
+databend-common-exception = { workspace = true }
+log = { workspace = true }
+minitrace = { workspace = true }
+opendal = { workspace = true }
+
+[lints]
+workspace = true

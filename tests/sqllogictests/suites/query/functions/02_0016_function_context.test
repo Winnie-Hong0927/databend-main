@@ -1,0 +1,18 @@
+query T
+SELECT current_user()
+----
+'root'@'%'
+
+query T
+SELECT user()
+----
+'root'@'%'
+
+statement ok
+set timezone='UTC'
+
+query T
+SELECT timezone()
+----
+UTC
+

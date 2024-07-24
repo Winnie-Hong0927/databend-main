@@ -1,0 +1,41 @@
+[package]
+name = "databend-common-meta-sled-store"
+description = "Sled store backend for raft state machine"
+version = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+publish = { workspace = true }
+edition = { workspace = true }
+
+[lib]
+doctest = false
+test = true
+
+[features]
+io-uring = ["sled/io_uring"]
+
+[dependencies]
+anyerror = { workspace = true }
+byteorder = { workspace = true }
+databend-common-meta-stoerr = { workspace = true }
+databend-common-meta-types = { workspace = true }
+databend-common-tracing = { workspace = true }
+log = { workspace = true }
+minitrace = { workspace = true }
+openraft = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+sled = { workspace = true }
+tempfile = "3.4.0"
+thiserror = { workspace = true }
+tokio = { workspace = true }
+
+[dev-dependencies]
+anyhow = { workspace = true }
+databend-common-base = { workspace = true }
+pretty_assertions = "1.3.0"
+test-harness = "0.1.1"
+tokio = { workspace = true }
+
+[lints]
+workspace = true

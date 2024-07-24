@@ -1,0 +1,29 @@
+[package]
+name = "databend-common-metrics"
+version = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+publish = { workspace = true }
+edition = { workspace = true }
+
+[lib]
+doctest = false
+test = true
+
+[dependencies]
+databend-common-base = { workspace = true }
+prometheus-client = { workspace = true }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+procfs = "0.15.1"
+
+[dev-dependencies]
+anyhow = { workspace = true }
+
+[dev-dependencies.tokio]
+default-features = false
+features = ["io-util", "net", "sync", "rt-multi-thread", "macros"]
+version = "1.26.0"
+
+[lints]
+workspace = true

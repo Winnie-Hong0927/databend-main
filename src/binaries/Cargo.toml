@@ -1,0 +1,64 @@
+[package]
+name = "databend-binaries"
+description = "databend command line tools"
+version = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+publish = { workspace = true }
+edition = { workspace = true }
+
+[features]
+default = ["simd", "jemalloc"]
+memory-profiling = [
+    "databend-query/memory-profiling",
+    "databend-common-base/memory-profiling",
+]
+python-udf = ["databend-query/python-udf"]
+simd = ["databend-query/simd"]
+jemalloc = ["databend-common-base/jemalloc"]
+io-uring = [
+    "databend-query/io-uring",
+]
+
+[dependencies]
+clap = { workspace = true }
+databend-common-base = { workspace = true }
+databend-common-config = { workspace = true }
+databend-common-exception = { workspace = true }
+databend-common-license = { workspace = true }
+databend-common-meta-client = { workspace = true }
+databend-common-metrics = { workspace = true }
+databend-common-storage = { workspace = true }
+databend-common-tracing = { workspace = true }
+databend-enterprise-background-service = { workspace = true }
+databend-enterprise-query = { workspace = true }
+databend-query = { workspace = true }
+databend-storages-common-table-meta = { workspace = true }
+limits-rs = "0.2.0"
+log = { workspace = true }
+opendal = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+serfig = { workspace = true }
+tokio = { workspace = true }
+
+[[bin]]
+name = "databend-query"
+path = "query/ee_main.rs"
+doctest = false
+test = false
+
+[[bin]]
+name = "databend-query-oss"
+path = "query/oss_main.rs"
+doctest = false
+test = false
+
+[[bin]]
+name = "table-meta-inspector"
+path = "tool/table_meta_inspector.rs"
+doctest = false
+test = false
+
+[lints]
+workspace = true

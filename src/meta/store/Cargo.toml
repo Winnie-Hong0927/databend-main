@@ -1,0 +1,28 @@
+[package]
+name = "databend-common-meta-store"
+description = "MetaStore is impl with either a local embedded meta store, or a grpc-client of metasrv"
+version = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+publish = { workspace = true }
+edition = { workspace = true }
+
+[lib]
+doctest = false
+test = true
+
+[features]
+io-uring = ["databend-common-meta-embedded/io-uring"]
+
+[dependencies]
+async-trait = { workspace = true }
+databend-common-grpc = { workspace = true }
+databend-common-meta-client = { workspace = true }
+databend-common-meta-embedded = { workspace = true }
+databend-common-meta-kvapi = { workspace = true }
+databend-common-meta-types = { workspace = true }
+log = { workspace = true }
+tokio-stream = { workspace = true }
+
+[lints]
+workspace = true

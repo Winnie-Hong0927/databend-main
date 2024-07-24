@@ -1,0 +1,273 @@
+statement ok
+set enable_experimental_merge_into = 1;
+
+statement ok
+set enable_distributed_merge_into = 1;
+
+statement ok
+drop table if exists t1;
+
+statement ok
+create table t1(a int);
+
+statement ok
+drop table if exists t2;
+
+statement ok
+create table t2(a int);
+
+statement ok
+insert into t1 values(1),(2),(3),(4),(5);
+
+statement ok
+insert into t1 values(6),(7),(8),(9),(10);
+
+statement ok
+insert into t1 values(11),(12),(13),(14),(15);
+
+statement ok
+insert into t2 values(8);
+
+query ?
+select * from t1 order by a;
+----
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+
+query T
+select * from t2 order by a;
+----
+8
+
+## check there is add row_number.
+query T
+explain merge into t1 using (select * from t2) as t on t1.a > t.a when matched then update * when not matched then insert *;
+----
+CommitSink
+└── MergeInto
+    ├── target table: [catalog: default] [database: default] [table: t1]
+    ├── matched update: [condition: None, update set a = if(CAST(_predicate (#18446744073709551615) AS Boolean NULL), a (#0), t1.a (#1))]
+    ├── unmatched insert: [condition: None, insert into (a) values(a (#0))]
+    └── RowFetch
+        ├── output columns: [t1.a (#1), t1._row_id (#2), t2.a (#0)]
+        ├── columns to fetch: []
+        └── HashJoin
+            ├── output columns: [t1.a (#1), t1._row_id (#2), t2.a (#0)]
+            ├── join type: RIGHT OUTER
+            ├── build keys: []
+            ├── probe keys: []
+            ├── filters: [t1.a (#1) > t.a (#0)]
+            ├── estimated rows: 15.00
+            ├── Exchange(Build)
+            │   ├── output columns: [t2.a (#0)]
+            │   ├── exchange type: Merge
+            │   └── TableScan
+            │       ├── table: default.default.t2
+            │       ├── output columns: [a (#0)]
+            │       ├── read rows: 1
+            │       ├── read size: < 1 KiB
+            │       ├── partitions total: 1
+            │       ├── partitions scanned: 1
+            │       ├── pruning stats: [segments: <range pruning: 1 to 1>, blocks: <range pruning: 1 to 1>]
+            │       ├── push downs: [filters: [], limit: NONE]
+            │       └── estimated rows: 1.00
+            └── Exchange(Probe)
+                ├── output columns: [t1.a (#1), t1._row_id (#2)]
+                ├── exchange type: Merge
+                └── TableScan
+                    ├── table: default.default.t1
+                    ├── output columns: [a (#1), _row_id (#2)]
+                    ├── read rows: 15
+                    ├── read size: < 1 KiB
+                    ├── partitions total: 3
+                    ├── partitions scanned: 3
+                    ├── pruning stats: [segments: <range pruning: 3 to 3>, blocks: <range pruning: 3 to 3>]
+                    ├── push downs: [filters: [], limit: NONE]
+                    └── estimated rows: 15.00
+
+## check there is no add row_number.
+query T
+explain merge into t1 using t2 on t1.a < t2.a when matched then update * when not matched then insert *;
+----
+CommitSink
+└── MergeInto
+    ├── target table: [catalog: default] [database: default] [table: t1]
+    ├── matched update: [condition: None, update set a = if(CAST(_predicate (#18446744073709551615) AS Boolean NULL), a (#0), t1.a (#1))]
+    ├── unmatched insert: [condition: None, insert into (a) values(a (#0))]
+    └── RowFetch
+        ├── output columns: [t1.a (#1), t1._row_id (#2), t2.a (#0)]
+        ├── columns to fetch: []
+        └── HashJoin
+            ├── output columns: [t1.a (#1), t1._row_id (#2), t2.a (#0)]
+            ├── join type: RIGHT OUTER
+            ├── build keys: []
+            ├── probe keys: []
+            ├── filters: [t1.a (#1) < t2.a (#0)]
+            ├── estimated rows: 15.00
+            ├── Exchange(Build)
+            │   ├── output columns: [t2.a (#0)]
+            │   ├── exchange type: Merge
+            │   └── TableScan
+            │       ├── table: default.default.t2
+            │       ├── output columns: [a (#0)]
+            │       ├── read rows: 1
+            │       ├── read size: < 1 KiB
+            │       ├── partitions total: 1
+            │       ├── partitions scanned: 1
+            │       ├── pruning stats: [segments: <range pruning: 1 to 1>, blocks: <range pruning: 1 to 1>]
+            │       ├── push downs: [filters: [], limit: NONE]
+            │       └── estimated rows: 1.00
+            └── Exchange(Probe)
+                ├── output columns: [t1.a (#1), t1._row_id (#2)]
+                ├── exchange type: Merge
+                └── TableScan
+                    ├── table: default.default.t1
+                    ├── output columns: [a (#1), _row_id (#2)]
+                    ├── read rows: 15
+                    ├── read size: < 1 KiB
+                    ├── partitions total: 3
+                    ├── partitions scanned: 3
+                    ├── pruning stats: [segments: <range pruning: 3 to 3>, blocks: <range pruning: 3 to 3>]
+                    ├── push downs: [filters: [], limit: NONE]
+                    └── estimated rows: 15.00
+
+query TT
+merge into t1 using t2 on t1.a < t2.a when matched then update * when not matched then insert *;
+----
+0 7
+
+query T
+select * from t1 order by a;
+----
+8
+8
+8
+8
+8
+8
+8
+8
+9
+10
+11
+12
+13
+14
+15
+
+## test stage table
+statement ok
+drop table if exists t1;
+
+statement ok
+drop table if exists t2;
+
+statement ok
+create table t1(a int);
+
+statement ok
+drop stage if exists ss;
+
+statement ok
+create stage ss FILE_FORMAT = (TYPE = CSV);
+
+statement ok
+create table t2(a int);
+
+statement ok
+insert into t2 values(1),(2),(3);
+
+statement ok
+insert into t2 values(4),(5),(6);
+
+statement ok
+copy into @ss from (select * from t2);
+
+statement ok
+insert into t1 values(9),(10);
+
+query T
+explain merge into t1 using (select $1 as a from @ss) as t2 on t1.a = t2.a when matched then update * when not matched then insert *;
+----
+CommitSink
+└── Exchange
+    ├── output columns: []
+    ├── exchange type: Merge
+    └── MergeInto
+        ├── target table: [catalog: default] [database: default] [table: t1]
+        ├── matched update: [condition: None, update set a = if(CAST(_predicate (#18446744073709551615) AS Boolean NULL), CAST(a (#0) AS Int32 NULL), t1.a (#1))]
+        ├── unmatched insert: [condition: None, insert into (a) values(CAST(a (#0) AS Int32 NULL))]
+        └── RowFetch
+            ├── output columns: [t1.a (#1), t1._row_id (#2), stage._$1 (#0)]
+            ├── columns to fetch: []
+            └── Exchange
+                ├── output columns: [t1.a (#1), t1._row_id (#2), stage._$1 (#0)]
+                ├── exchange type: Hash(bit_and(bit_shift_right(t1._row_id (#2), CAST(31 AS UInt64 NULL)), CAST(2047 AS UInt64 NULL)))
+                └── HashJoin
+                    ├── output columns: [t1.a (#1), t1._row_id (#2), stage._$1 (#0)]
+                    ├── join type: RIGHT OUTER
+                    ├── build keys: [CAST(t2.a (#0) AS Int64 NULL)]
+                    ├── probe keys: [CAST(t1.a (#1) AS Int64 NULL)]
+                    ├── filters: []
+                    ├── estimated rows: 0.00
+                    ├── Exchange(Build)
+                    │   ├── output columns: [stage._$1 (#0)]
+                    │   ├── exchange type: Hash(CAST(t2.a (#0) AS Int64 NULL))
+                    │   └── TableScan
+                    │       ├── table: default.system.stage
+                    │       ├── output columns: [_$1 (#0)]
+                    │       ├── read rows: 6
+                    │       ├── read size: < 1 KiB
+                    │       ├── partitions total: 1
+                    │       ├── partitions scanned: 1
+                    │       ├── push downs: [filters: [], limit: NONE]
+                    │       └── estimated rows: 0.00
+                    └── Exchange(Probe)
+                        ├── output columns: [t1.a (#1), t1._row_id (#2)]
+                        ├── exchange type: Hash(CAST(t1.a (#1) AS Int64 NULL))
+                        └── TableScan
+                            ├── table: default.default.t1
+                            ├── output columns: [a (#1), _row_id (#2)]
+                            ├── read rows: 2
+                            ├── read size: < 1 KiB
+                            ├── partitions total: 1
+                            ├── partitions scanned: 1
+                            ├── pruning stats: [segments: <range pruning: 1 to 1>, blocks: <range pruning: 1 to 1>]
+                            ├── push downs: [filters: [], limit: NONE]
+                            └── estimated rows: 2.00
+
+query TT
+merge into t1 using (select $1 as a from @ss) as t2 on t1.a = t2.a when matched then update * when not matched then insert *;
+----
+6 0
+
+query T
+select * from t1 order by a;
+----
+1
+2
+3
+4
+5
+6
+9
+10
+
+statement ok
+set enable_experimental_merge_into = 0;
+
+statement ok
+set enable_distributed_merge_into = 0;

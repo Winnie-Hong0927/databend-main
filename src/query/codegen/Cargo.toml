@@ -1,0 +1,22 @@
+[package]
+name = "databend-codegen"
+version = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+publish = { workspace = true }
+edition = { workspace = true }
+
+[lib]
+doctest = false
+test = true
+
+[[bin]]
+name = "codegen"
+path = "src/bin/codegen.rs"
+
+[dependencies]
+databend-common-expression = { workspace = true }
+itertools = { workspace = true }
+
+[lints]
+workspace = true

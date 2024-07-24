@@ -1,0 +1,73 @@
+statement ok
+DROP DATABASE IF EXISTS db1
+
+statement ok
+CREATE DATABASE db1
+
+statement ok
+USE db1
+
+statement ok
+CREATE TABLE test_table(id INTEGER, name VARCHAR, age INT)
+
+statement ok
+insert into test_table (id,name,age) values (1,'2',3), (4, '5', 6)
+
+statement ok
+DROP STAGE IF EXISTS test
+
+statement ok
+CREATE STAGE IF NOT EXISTS test
+
+statement ok
+copy into @test from test_table FILE_FORMAT = (type = CSV)
+
+statement ok
+copy into test_table from @test FILE_FORMAT = (type = CSV)
+
+query A
+SELECT COUNT() FROM test_table
+----
+4
+
+statement ok
+drop table test_table all
+
+statement ok
+drop stage test
+
+statement ok
+DROP STAGE IF EXISTS hello
+
+statement ok
+CREATE STAGE IF NOT EXISTS hello
+
+statement ok
+COPY INTO @hello from (select number from numbers(10)) FILE_FORMAT = (type = parquet)
+
+statement ok
+COPY INTO @hello from (select number from numbers(1) where number in  (select max(number) from numbers(1000)) ) FILE_FORMAT = (type = parquet)
+
+statement ok
+with S as (select number from numbers(1000) where number > 100) COPY INTO @hello from (select number from numbers(1) where number not in (SELECT number FROM S)) FILE_FORMAT = (type = parquet)
+
+query I
+select sum($1) from @hello;
+----
+45
+
+statement ok
+CREATE TABLE world(c1 int , c2 int);
+
+statement error (?s)1006.*Number of columns in select list \(1\) does not match that of the corresponding table \(2\)
+COPY INTO world FROM (select number  from @hello )   file_format = (type = PARQUET);
+
+statement ok
+DROP STAGE IF EXISTS hello
+
+statement ok
+drop table world
+
+statement ok
+DROP DATABASE db1
+

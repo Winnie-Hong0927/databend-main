@@ -1,0 +1,27 @@
+[package]
+name = "databend-common-meta-process"
+description = "process meta-service data"
+version = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+publish = { workspace = true }
+edition = { workspace = true }
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true }
+databend-common-meta-app = { workspace = true }
+databend-common-meta-kvapi = { workspace = true }
+databend-common-meta-raft-store = { workspace = true }
+databend-common-meta-sled-store = { workspace = true }
+databend-common-meta-types = { workspace = true }
+databend-common-proto-conv = { workspace = true }
+databend-common-protos = { workspace = true }
+databend-common-tracing = { workspace = true }
+openraft = { workspace = true }
+prost = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[lints]
+workspace = true

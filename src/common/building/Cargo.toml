@@ -1,0 +1,22 @@
+[package]
+name = "databend-common-building"
+version = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+publish = { workspace = true }
+edition = { workspace = true }
+
+[lib]
+doctest = false
+test = true
+
+[dependencies]
+anyhow = { workspace = true }
+cargo-license = "0.6.1"
+cargo_metadata = "0.18"
+gix = "0.63.0"
+log = { workspace = true }
+vergen = { version = "8.3.1", default-features = false, features = ["build", "cargo", "git", "gix", "rustc"] }
+
+[lints]
+workspace = true

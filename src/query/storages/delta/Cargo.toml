@@ -1,0 +1,41 @@
+[package]
+name = "databend-common-storages-delta"
+version = { workspace = true }
+edition = "2021"
+authors = ["Databend Authors <opensource@datafuselabs.com>"]
+license = "Apache-2.0"
+publish = false
+
+[dependencies]
+arrow-schema = { workspace = true }
+async-backtrace = { workspace = true }
+async-trait = { workspace = true }
+databend-common-base = { workspace = true }
+databend-common-catalog = { workspace = true }
+databend-common-exception = { workspace = true }
+databend-common-expression = { workspace = true }
+databend-common-meta-app = { workspace = true }
+databend-common-pipeline-core = { workspace = true }
+databend-common-storage = { workspace = true }
+databend-common-storages-parquet = { workspace = true }
+databend-storages-common-table-meta = { workspace = true }
+deltalake = { workspace = true }
+match-template = "0.0.1"
+minitrace = { workspace = true }
+object_store_opendal = "0.44"
+ordered-float = { workspace = true }
+parquet = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true }
+typetag = "0.2"
+url = "2.4.1"
+
+[dev-dependencies]
+maplit = "1.0.2"
+
+[lints]
+workspace = true
+
+[package.metadata.cargo-machete]
+ignored = ["match-template"]

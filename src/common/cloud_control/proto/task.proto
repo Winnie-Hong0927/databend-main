@@ -1,0 +1,249 @@
+syntax = "proto3";
+option go_package = "databend.com/cloudcontrol/proto";
+
+package taskproto;
+
+message ScheduleOptions {
+  enum ScheduleType {
+    interval_type = 0;
+    cron_type = 1;
+  }
+  optional int32 interval = 1; //  secs, INTERVAL= '5 second' means execute sql every 5 secs
+  optional string cron = 2; // CRON = '0 2 * * *' means Every night at 2 AM. UTC time zone.
+  optional string time_zone = 3; // "UTC..."
+  ScheduleType schedule_type = 4;
+  optional uint64 milliseconds_interval = 5; // milliseconds level interval
+}
+
+message WarehouseOptions {
+  optional string warehouse = 1;  // warehouse or using_warehouse_size
+  optional string using_warehouse_size = 2;  //TODO using warehouse or just use serverless warehouse by size
+}
+
+enum TaskSQLType {
+  SQL = 0;
+  SCRIPT = 1;
+}
+
+message ScriptSQL {
+  repeated string sqls = 1;
+}
+
+message CreateTaskRequest {
+  string task_name = 1;
+  string tenant_id = 2;
+  string query_text = 3; // task running sql
+  string owner = 4;
+  optional string comment = 5; // some comment
+  ScheduleOptions schedule_options = 7;
+  WarehouseOptions warehouse_options = 8;
+
+  optional int32 suspend_task_after_num_failures = 9; //SUSPEND_TASK_AFTER_NUM_FAILURES
+  bool if_not_exist = 10;
+  // DAG
+  repeated string after = 11; //
+  optional string when_condition = 12;
+  map<string, string> session_parameters = 13;
+  optional string error_integration = 14;
+  TaskSQLType task_sql_type = 15;
+  ScriptSQL script_sql = 16;
+}
+
+message TaskError {
+  string kind = 1;
+  string message = 2;
+  int32 code = 3;
+}
+
+message CreateTaskResponse {
+  optional TaskError error = 1;
+  uint64 task_id = 2;
+}
+
+message DropTaskRequest {
+  string tenant_id = 1;
+  string task_name = 2;
+  bool if_exist = 3;
+}
+message DropTaskResponse {
+  optional TaskError error = 1;
+}
+
+message ExecuteTaskRequest {
+  string tenant_id = 1;
+  string task_name = 2;
+}
+
+message ExecuteTaskResponse {
+  optional TaskError error = 2;
+}
+
+message DescribeTaskRequest {
+  string tenant_id = 1;
+  string task_name = 2;
+  bool if_exist = 3;
+}
+
+message Task {
+  enum Status {
+    Suspended = 0;
+    Started = 1;
+  }
+  uint64 task_id = 1;
+  string task_name = 2;
+  string query_text = 4;
+  optional string comment = 5;
+  string owner = 6;
+  ScheduleOptions schedule_options = 7;
+  WarehouseOptions warehouse_options = 8;
+  optional string next_scheduled_at = 9;
+  optional int32 suspend_task_after_num_failures = 10; //SUSPEND_TASK_AFTER_NUM_FAILURES
+  Status status = 12;
+  string created_at = 14; // RFC 3339 format time
+  string updated_at = 15;
+  optional string last_suspended_at = 16;
+  repeated string after = 17;
+  optional string when_condition = 18;
+  map<string, string> session_parameters = 19;
+  optional string error_integration = 20;
+}
+
+
+message DescribeTaskResponse {
+  Task task = 1;
+  optional TaskError error = 2;
+}
+
+message ShowTasksRequest {// every owner has a roles list like ["role1", "role2"], list tasks in the role list
+  string tenant_id = 1;
+  string name_like = 2;
+  int32 result_limit = 4;
+  repeated string owners = 5;   // all available roles under current client
+  repeated string task_ids = 6; // all task ids which permit to access for given user
+}
+
+message ShowTasksResponse {
+  repeated Task tasks = 1;
+  optional TaskError error = 2;
+}
+
+message AlterTaskRequest {
+  enum AlterTaskType {
+    Suspend = 0;
+    Resume = 1;
+    Set = 2;
+    ModifyAs = 3;
+    ModifyWhen = 4;
+    AddAfter = 5;
+    RemoveAfter = 6;
+  }
+  string task_name = 1;
+  string tenant_id = 2;
+  optional string query_text = 3; // task running sql
+  optional string comment = 4; // some comment
+  AlterTaskType alter_task_type = 5;
+  string owner = 6;
+  ScheduleOptions schedule_options = 7;
+  bool if_exist = 8;
+  WarehouseOptions warehouse_options = 9;
+  optional int32 suspend_task_after_num_failures = 10; //SUSPEND_TASK_AFTER_NUM_FAILURES
+  optional string when_condition = 11;
+  repeated string add_after = 12;
+  repeated string remove_after = 13;
+  bool set_session_parameters = 14;
+  map<string, string> session_parameters = 15;
+  optional string error_integration = 16;
+  TaskSQLType task_sql_type = 17;
+  ScriptSQL script_sql = 18;
+}
+
+message AlterTaskResponse {
+  optional TaskError error = 1;
+  Task task = 2;
+}
+
+message ShowTaskRunsRequest {
+  string tenant_id = 1;
+  string scheduled_time_start = 2; // RFC3339 time
+  string scheduled_time_end = 3;
+  int32 result_limit = 4; //A number specifying the maximum number of rows returned max:10000, default: 100
+  bool error_only = 5; // When set to TRUE, this function returns only task runs that failed or were cancelled.
+  repeated string owners = 6;
+  repeated string task_ids = 7;
+  string task_name = 8;
+  repeated string task_names = 9;
+  optional string root_task_id = 10;
+
+  optional int32 page_size = 90; // 100 by default
+  optional int64 next_page_token = 91;
+  optional int64 previous_page_token = 92;
+}
+
+message TaskRun {
+  enum State {
+    SCHEDULED = 0;
+    EXECUTING = 1;
+    SUCCEEDED = 2;
+    FAILED = 3;
+    CANCELLED = 4;
+  }
+  uint64 task_id = 1;
+  string task_name = 2;
+  string query_text = 4;
+  optional string comment = 5;
+  string owner = 6;
+  ScheduleOptions schedule_options = 7;
+  string run_id = 8;
+  int32 attempt_number = 9;
+  WarehouseOptions warehouse_options = 10;
+
+  State state = 11;
+  int64 error_code = 12;
+  optional string error_message = 13;
+  string scheduled_time = 14;
+  optional string completed_time = 16;
+
+  string query_id = 17;
+  string condition_text = 18;
+  string root_task_id = 19;
+  map<string, string> session_parameters = 20;
+}
+
+message ShowTaskRunsResponse {
+  repeated TaskRun task_runs = 1;
+  optional TaskError error = 2;
+  optional int64 next_page_token = 6;
+  optional int64 previous_page_token = 7;
+}
+
+message GetTaskDependentsRequest {
+  string tenant_id = 1;
+  string task_name = 2;
+  bool recursive = 3;
+}
+
+message GetTaskDependentsResponse {
+  repeated Task task = 1;
+  optional TaskError error = 2;
+}
+
+message EnableTaskDependentsRequest {
+  string tenant_id = 1;
+  string task_name = 2;
+}
+
+message EnableTaskDependentsResponse {
+  optional TaskError error = 1;
+}
+
+service TaskService {
+  rpc CreateTask(CreateTaskRequest) returns (CreateTaskResponse);
+  rpc DescribeTask(DescribeTaskRequest) returns (DescribeTaskResponse);
+  rpc ExecuteTask(ExecuteTaskRequest) returns (ExecuteTaskResponse);
+  rpc DropTask(DropTaskRequest) returns (DropTaskResponse);
+  rpc AlterTask(AlterTaskRequest) returns(AlterTaskResponse);
+  rpc ShowTasks(ShowTasksRequest) returns (ShowTasksResponse);
+  rpc ShowTaskRuns(ShowTaskRunsRequest) returns (ShowTaskRunsResponse);
+  rpc GetTaskDependents(GetTaskDependentsRequest) returns (GetTaskDependentsResponse);
+  rpc EnableTaskDependents(EnableTaskDependentsRequest) returns (EnableTaskDependentsResponse);
+}

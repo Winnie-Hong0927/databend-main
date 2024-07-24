@@ -1,0 +1,81 @@
+[package]
+name = "databend-common-functions"
+version = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+publish = { workspace = true }
+edition = { workspace = true }
+
+[lib]
+doctest = false
+
+[dependencies]
+base64 = "0.21.0"
+blake3 = "1.3.1"
+borsh = { workspace = true, features = ["derive"] }
+bstr = "1.0.1"
+bumpalo = { workspace = true }
+chrono = { workspace = true }
+chrono-tz = { workspace = true }
+crc32fast = "1.3.2"
+criterion = { workspace = true }
+ctor = { workspace = true }
+databend-common-arrow = { workspace = true }
+databend-common-base = { workspace = true }
+databend-common-exception = { workspace = true }
+databend-common-expression = { workspace = true }
+databend-common-hashtable = { workspace = true }
+databend-common-io = { workspace = true }
+databend-common-openai = { workspace = true }
+databend-common-vector = { workspace = true }
+dtparse = { git = "https://github.com/TCeason/dtparse.git", rev = "de0a15b" }
+ethnum = { workspace = true }
+geo = { workspace = true }
+geo-types = "0.7.13"
+geohash = "0.13.0"
+geos = { workspace = true }
+geozero = { workspace = true }
+h3o = "0.4.0"
+hex = "0.4.3"
+itertools = { workspace = true }
+jsonb = { workspace = true }
+lexical-core = "0.8.5"
+libm = "0.2.6"
+match-template = { workspace = true }
+md-5 = "0.10.5"
+memchr = { version = "2", default-features = false }
+naive-cityhash = "0.2.0"
+num-traits = "0.2.15"
+once_cell = { workspace = true }
+ordered-float = { workspace = true, features = [
+    "serde",
+    "rand",
+] }
+rand = { workspace = true }
+regex = { workspace = true }
+roaring = "0.10.1"
+serde = { workspace = true }
+serde_json = { workspace = true }
+sha1 = "0.10.5"
+sha2 = "0.10.6"
+simdutf8 = "0.1.4"
+simple_hll = { version = "0.0.1", features = ["serde_borsh"] }
+siphasher = "0.3"
+strength_reduce = "0.2.3"
+stringslice = "0.2.0"
+twox-hash = "1.6.3"
+
+[dev-dependencies]
+comfy-table = "6"
+databend-common-ast = { workspace = true }
+goldenfile = "1.4"
+
+[[bench]]
+name = "bench"
+harness = false
+
+[lints]
+workspace = true
+
+[package.metadata.cargo-machete]
+ignored = ["md-5"]

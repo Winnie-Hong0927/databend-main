@@ -1,0 +1,407 @@
+[workspace.package]
+version = "0.1.0"
+authors = ["Databend Authors <opensource@datafuselabs.com>"]
+license = "Apache-2.0"
+publish = false
+edition = "2021"
+
+[workspace]
+resolver = "2"
+members = [
+    "src/binaries",
+    "src/common/arrow",
+    "src/common/auth",
+    "src/common/base",
+    "src/common/building",
+    "src/common/cache",
+    "src/common/cloud_control",
+    "src/common/compress",
+    "src/common/exception",
+    "src/common/grpc",
+    "src/common/hashtable",
+    "src/common/http",
+    "src/common/io",
+    "src/common/metrics",
+    "src/common/openai",
+    "src/common/tracing",
+    "src/common/storage",
+    "src/common/vector",
+    "src/common/license",
+    "src/common/parquet2",
+    "src/query/ast",
+    "src/query/async_functions",
+    "src/query/codegen",
+    "src/query/config",
+    "src/query/catalog",
+    "src/query/sharing",
+    "src/query/datavalues",
+    "src/query/expression",
+    "src/query/formats",
+    "src/query/functions",
+    "src/query/management",
+    "src/query/pipeline/core",
+    "src/query/pipeline/sinks",
+    "src/query/pipeline/sources",
+    "src/query/pipeline/transforms",
+    "src/query/script",
+    "src/query/settings",
+    "src/query/sql",
+    "src/query/storages/common/blocks",
+    "src/query/storages/common/cache",
+    "src/query/storages/common/cache_manager",
+    "src/query/storages/common/index",
+    "src/query/storages/common/io",
+    "src/query/storages/common/pruner",
+    "src/query/storages/common/stage",
+    "src/query/storages/common/txn",
+    "src/query/storages/common/table_meta",
+    "src/query/storages/delta",
+    "src/query/storages/factory",
+    "src/query/storages/fuse",
+    "src/query/storages/hive/hive",
+    "src/query/storages/iceberg",
+    "src/query/storages/information_schema",
+    "src/query/storages/memory",
+    "src/query/storages/null",
+    "src/query/storages/orc",
+    "src/query/storages/random",
+    "src/query/storages/share",
+    "src/query/storages/stage",
+    "src/query/storages/stream",
+    "src/query/storages/system",
+    "src/query/storages/view",
+    "src/query/storages/parquet",
+    "src/query/storages/result_cache",
+    "src/query/users",
+    "src/query/ee_features/attach_table",
+    "src/query/ee_features/vacuum_handler",
+    "src/query/ee_features/background_service",
+    "src/query/ee_features/aggregating_index",
+    "src/query/ee_features/data_mask",
+    "src/query/ee_features/storage_encryption",
+    "src/query/ee_features/stream_handler",
+    "src/query/ee_features/storage_quota",
+    "src/query/ee_features/inverted_index",
+    "src/query/ee_features/virtual_column",
+    "src/query/service",
+    "src/query/ee",
+    "src/meta/api",
+    "src/meta/app",
+    "src/meta/binaries",
+    "src/meta/client",
+    "src/meta/embedded",
+    "src/meta/kvapi",
+    "src/meta/process",
+    "src/meta/raft-store",
+    "src/meta/sled-store",
+    "src/meta/stoerr",
+    "src/meta/store",
+    "src/meta/types",
+    "src/meta/ee",
+    "src/meta/proto-conv",
+    "src/meta/protos",
+    "src/meta/service",
+    "tests/sqllogictests",
+    "src/tests/sqlsmith",
+]
+
+# Workspace dependencies
+[workspace.dependencies]
+databend-common-arrow = { path = "src/common/arrow" }
+databend-common-ast = { path = "src/query/ast" }
+databend-common-async-functions = { path = "src/query/async_functions" }
+databend-common-auth = { path = "src/common/auth" }
+databend-common-base = { path = "src/common/base" }
+databend-common-binaries = { path = "src/binaries" }
+databend-common-building = { path = "src/common/building" }
+databend-common-cache = { path = "src/common/cache" }
+databend-common-catalog = { path = "src/query/catalog" }
+databend-common-cloud-control = { path = "src/common/cloud_control" }
+databend-common-codegen = { path = "src/query/codegen" }
+databend-common-compress = { path = "src/common/compress" }
+databend-common-config = { path = "src/query/config" }
+databend-common-datavalues = { path = "src/query/datavalues" }
+databend-common-exception = { path = "src/common/exception" }
+databend-common-expression = { path = "src/query/expression" }
+databend-common-formats = { path = "src/query/formats" }
+databend-common-functions = { path = "src/query/functions" }
+databend-common-grpc = { path = "src/common/grpc" }
+databend-common-hashtable = { path = "src/common/hashtable" }
+databend-common-http = { path = "src/common/http" }
+databend-common-io = { path = "src/common/io" }
+databend-common-license = { path = "src/common/license" }
+databend-common-management = { path = "src/query/management" }
+databend-common-meta-api = { path = "src/meta/api" }
+databend-common-meta-app = { path = "src/meta/app" }
+databend-common-meta-client = { path = "src/meta/client" }
+databend-common-meta-embedded = { path = "src/meta/embedded" }
+databend-common-meta-kvapi = { path = "src/meta/kvapi" }
+databend-common-meta-process = { path = "src/meta/process" }
+databend-common-meta-raft-store = { path = "src/meta/raft-store" }
+databend-common-meta-sled-store = { path = "src/meta/sled-store" }
+databend-common-meta-stoerr = { path = "src/meta/stoerr" }
+databend-common-meta-store = { path = "src/meta/store" }
+databend-common-meta-types = { path = "src/meta/types" }
+databend-common-metrics = { path = "src/common/metrics" }
+databend-common-openai = { path = "src/common/openai" }
+databend-common-parquet2 = { path = "src/common/parquet2" }
+databend-common-pipeline-core = { path = "src/query/pipeline/core" }
+databend-common-pipeline-sinks = { path = "src/query/pipeline/sinks" }
+databend-common-pipeline-sources = { path = "src/query/pipeline/sources" }
+databend-common-pipeline-transforms = { path = "src/query/pipeline/transforms" }
+databend-common-proto-conv = { path = "src/meta/proto-conv" }
+databend-common-protos = { path = "src/meta/protos" }
+databend-common-script = { path = "src/query/script" }
+databend-common-settings = { path = "src/query/settings" }
+databend-common-sharing = { path = "src/query/sharing" }
+databend-common-sql = { path = "src/query/sql" }
+databend-common-sqlsmith = { path = "src/tests/sqlsmith" }
+databend-common-storage = { path = "src/common/storage" }
+databend-common-storages-delta = { path = "src/query/storages/delta" }
+databend-common-storages-factory = { path = "src/query/storages/factory" }
+databend-common-storages-fuse = { path = "src/query/storages/fuse" }
+databend-common-storages-hive = { path = "src/query/storages/hive/hive" }
+databend-common-storages-iceberg = { path = "src/query/storages/iceberg" }
+databend-common-storages-information-schema = { path = "src/query/storages/information_schema" }
+databend-common-storages-memory = { path = "src/query/storages/memory" }
+databend-common-storages-null = { path = "src/query/storages/null" }
+databend-common-storages-orc = { path = "src/query/storages/orc" }
+databend-common-storages-parquet = { path = "src/query/storages/parquet" }
+databend-common-storages-random = { path = "src/query/storages/random" }
+databend-common-storages-result-cache = { path = "src/query/storages/result_cache" }
+databend-common-storages-share = { path = "src/query/storages/share" }
+databend-common-storages-stage = { path = "src/query/storages/stage" }
+databend-common-storages-stream = { path = "src/query/storages/stream" }
+databend-common-storages-system = { path = "src/query/storages/system" }
+databend-common-storages-view = { path = "src/query/storages/view" }
+databend-common-tracing = { path = "src/common/tracing" }
+databend-common-users = { path = "src/query/users" }
+databend-common-vector = { path = "src/common/vector" }
+databend-enterprise-aggregating-index = { path = "src/query/ee_features/aggregating_index" }
+databend-enterprise-attach-table = { path = "src/query/ee_features/attach_table" }
+databend-enterprise-background-service = { path = "src/query/ee_features/background_service" }
+databend-enterprise-data-mask-feature = { path = "src/query/ee_features/data_mask" }
+databend-enterprise-fail-safe = { path = "src/query/ee_features/fail_safe" }
+databend-enterprise-inverted-index = { path = "src/query/ee_features/inverted_index" }
+databend-enterprise-meta = { path = "src/meta/ee" }
+databend-enterprise-query = { path = "src/query/ee" }
+databend-enterprise-storage-encryption = { path = "src/query/ee_features/storage_encryption" }
+databend-enterprise-storage-quota = { path = "src/query/ee_features/storage_quota" }
+databend-enterprise-stream-handler = { path = "src/query/ee_features/stream_handler" }
+databend-enterprise-vacuum-handler = { path = "src/query/ee_features/vacuum_handler" }
+databend-enterprise-virtual-column = { path = "src/query/ee_features/virtual_column" }
+databend-meta = { path = "src/meta/service" }
+databend-query = { path = "src/query/service" }
+databend-sqllogictests = { path = "tests/sqllogictests" }
+databend-storages-common-blocks = { path = "src/query/storages/common/blocks" }
+databend-storages-common-cache = { path = "src/query/storages/common/cache" }
+databend-storages-common-cache-manager = { path = "src/query/storages/common/cache_manager" }
+databend-storages-common-index = { path = "src/query/storages/common/index" }
+databend-storages-common-io = { path = "src/query/storages/common/io" }
+databend-storages-common-pruner = { path = "src/query/storages/common/pruner" }
+databend-storages-common-stage = { path = "src/query/storages/common/stage" }
+databend-storages-common-table-meta = { path = "src/query/storages/common/table_meta" }
+databend-storages-common-txn = { path = "src/query/storages/common/txn" }
+
+# Crates.io dependencies
+anyerror = { version = "=0.1.10" }
+anyhow = { version = "1.0.65" }
+arrow = { version = "52" }
+arrow-array = { version = "52" }
+arrow-buffer = { version = "52" }
+arrow-cast = { version = "52", features = ["prettyprint"] }
+arrow-data = { version = "52" }
+arrow-flight = { version = "52", features = ["flight-sql-experimental", "tls"] }
+arrow-format = { version = "0.8.1", features = ["flight-data", "flight-service", "ipc"] }
+arrow-ipc = { version = "52" }
+arrow-ord = { version = "52" }
+arrow-schema = { version = "52", features = ["serde"] }
+arrow-select = { version = "52" }
+arrow-udf-js = "0.3.1"
+arrow-udf-python = "0.2.1"
+arrow-udf-wasm = "0.2.2"
+async-backtrace = "0.2"
+async-trait = { version = "0.1.77", package = "async-trait-fn" }
+backtrace = "0.3"
+base64 = "0.22"
+bincode = { version = "2.0.0-rc.3", features = ["serde", "std", "alloc"] }
+borsh = { version = "1.2.1", features = ["derive"] }
+bumpalo = "3.12.0"
+byteorder = "1.4.3"
+bytes = "1.5.0"
+chrono = { version = "0.4.31", features = ["serde"] }
+chrono-tz = { version = "0.8", features = ["serde"] }
+clap = { version = "4.4.2", features = ["derive"] }
+criterion = "0.5"
+ctor = "0.2"
+dashmap = "5.4.0"
+deepsize = { version = "0.2.0" }
+deltalake = "0.18"
+derive-visitor = { version = "0.4.0", features = ["std-types-drive"] }
+derive_more = "0.99.17"
+enumflags2 = { version = "0.7.7", features = ["serde"] }
+ethnum = { version = "1.5.0" }
+feature-set = { version = "0.1.1" }
+flatbuffers = "24" # Must use the same version with arrow-ipc
+futures = "0.3.24"
+futures-async-stream = { version = "0.2.7" }
+futures-util = "0.3.24"
+geo = { version = "0.27.0", features = ["use-serde"] }
+geos = { version = "8.3", features = ["static", "geo", "geo-types"] }
+geozero = { version = "0.13.0", features = ["default", "with-wkb", "with-geos", "with-geojson"] }
+hashbrown = { version = "0.14.3", default-features = false }
+http = "1"
+itertools = "0.10.5"
+jsonb = "0.4.1"
+match-template = "0.0.1"
+mysql_async = { version = "0.34", default-features = false, features = ["rustls-tls"] }
+once_cell = "1.15.0"
+openai_api_rust = "0.1"
+opendal = { version = "0.47.1", features = [
+    "layers-minitrace",
+    "layers-prometheus-client",
+    "layers-async-backtrace",
+    "services-s3",
+    "services-fs",
+    "services-gcs",
+    "services-cos",
+    "services-obs",
+    "services-oss",
+    "services-azblob",
+    "services-azdls",
+    "services-ipfs",
+    "services-http",
+    "services-moka",
+    "services-webhdfs",
+    "services-huggingface",
+] }
+openraft = { version = "0.9.13", features = [
+    "serde",
+    "tracing-log",
+    "generic-snapshot-data",
+    "storage-v2",
+    "loosen-follower-log-revert", # allows removing all data from a follower and restoring from the leader.
+] }
+orc-rust = "0.3"
+ordered-float = { version = "4.1.0", default-features = false }
+ordq = "0.2.0"
+parking_lot = "0.12.1"
+parquet = { version = "52", features = ["async"] }
+paste = "1.0.15"
+poem = { version = "3.0", features = ["rustls", "multipart", "compression"] }
+prometheus-client = "0.22"
+prost = { version = "0.12.1" }
+prost-build = { version = "0.12.1" }
+rand = { version = "0.8.5", features = ["small_rng"] }
+regex = "1.8.1"
+reqwest = { version = "0.12", default-features = false, features = [
+    "json",
+    "http2",
+    "rustls-tls",
+    "rustls-tls-native-roots",
+] }
+reqwest-hickory-resolver = "0.1"
+rotbl = { git = "https://github.com/drmingdrmer/rotbl", tag = "v0.1.2-alpha.6", features = [] }
+semver = "1.0.14"
+serde = { version = "1.0.164", features = ["derive", "rc"] }
+serde_json = { version = "1.0.85", default-features = false, features = ["preserve_order", "unbounded_depth"] }
+serde_stacker = { version = "0.1" }
+serde_with = { version = "3.8.1" }
+serfig = "0.1.0"
+sled = { version = "0.34", default-features = false }
+stream-more = "0.1.3"
+tantivy = "0.22.0"
+thiserror = { version = "1" }
+tikv-jemalloc-ctl = { version = "0.5.0", features = ["use_std"] }
+tokio = { version = "1.35.0", features = ["full"] }
+tokio-stream = "0.1.11"
+tonic = { version = "0.11.0", features = ["transport", "codegen", "prost", "tls-roots", "tls"] }
+tonic-build = { version = "0.11" }
+tonic-reflection = { version = "0.11.0" }
+typetag = "0.2.3"
+uuid = { version = "1.1.2", features = ["serde", "v4"] }
+walkdir = "2.3.2"
+xorfilter-rs = "0.5"
+
+# Observability
+log = { version = "0.4.21", features = ["serde", "kv_unstable_std"] }
+logcall = "0.1.9"
+minitrace = { version = "0.6.6", features = ["enable"] }
+minitrace-opentelemetry = "0.6.6"
+opentelemetry = { version = "0.23", features = ["trace", "logs"] }
+opentelemetry-otlp = { version = "0.16", features = [
+    "trace",
+    "logs",
+    "grpc-tonic",
+    "http-proto",
+    "reqwest-client",
+] }
+opentelemetry_sdk = { version = "0.23", features = ["trace", "logs", "rt-tokio"] }
+tracing = "0.1.40"
+tracing-appender = "0.2.3"
+tracing-subscriber = { version = "0.3.17", features = ["env-filter", "json", "valuable"] }
+
+[workspace.lints.rust]
+async_fn_in_trait = "allow"
+
+[workspace.lints.clippy]
+useless_format = "allow"
+
+[profile.release]
+debug = 1
+lto = "thin"
+overflow-checks = false
+incremental = false
+opt-level = "s"
+
+# codegen-units = 1 # Reduce number of codegen units to increase optimizations.
+
+# [profile.release.package]
+# arrow2 = { codegen-units = 4 }
+# common-functions = { codegen-units = 16 }
+# databend-query = { codegen-units = 4 }
+# databend-binaries = { codegen-units = 4 }
+
+[profile.bench]
+debug = true
+overflow-checks = false
+
+[profile.dev]
+split-debuginfo = "unpacked"
+overflow-checks = false
+# wait until https://github.com/rust-lang/rust/issues/100142 fixed
+incremental = false
+
+[profile.dev.package]
+addr2line = { opt-level = 3 }
+adler = { opt-level = 3 }
+gimli = { opt-level = 3 }
+miniz_oxide = { opt-level = 3 }
+object = { opt-level = 3 }
+rustc-demangle = { opt-level = 3 }
+
+[profile.test]
+opt-level = 0
+debug = true
+codegen-units = 16
+lto = false
+debug-assertions = true
+overflow-checks = true
+rpath = false
+
+[patch.crates-io]
+arrow-format = { git = "https://github.com/Xuanwo/arrow-format", rev = "be633a0" }
+arrow-udf-js = { git = "https://github.com/datafuse-extras/arrow-udf", rev = "dfa1390" }
+arrow-udf-python = { git = "https://github.com/datafuse-extras/arrow-udf", rev = "dfa1390" }
+arrow-udf-wasm = { git = "https://github.com/datafuse-extras/arrow-udf", rev = "dfa1390" }
+async-backtrace = { git = "https://github.com/zhang2014/async-backtrace.git", rev = "dea4553" }
+async-recursion = { git = "https://github.com/zhang2014/async-recursion.git", rev = "a353334" }
+backtrace = { git = "https://github.com/rust-lang/backtrace-rs.git", rev = "6145fe6b" }
+deltalake = { git = "https://github.com/delta-io/delta-rs", rev = "57795da" }
+ethnum = { git = "https://github.com/ariesdevil/ethnum-rs", rev = "4cb05f1" }
+object_store_opendal = { package = "object_store_opendal", git = "https://github.com/Xuanwo/opendal", rev = "d6baf68" }
+openai_api_rust = { git = "https://github.com/datafuse-extras/openai-api", rev = "819a0ed" }
+orc-rust = { git = "https://github.com/youngsofun/datafusion-orc", rev = "1745375" }
+recursive = { git = "https://github.com/zhang2014/recursive.git", rev = "6af35a1" }
+sled = { git = "https://github.com/datafuse-extras/sled", tag = "v0.34.7-datafuse.1" }
+xorfilter-rs = { git = "https://github.com/datafuse-extras/xorfilter", tag = "databend-alpha.4" }

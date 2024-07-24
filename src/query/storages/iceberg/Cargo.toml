@@ -1,0 +1,40 @@
+[package]
+name = "databend-common-storages-iceberg"
+version = { workspace = true }
+edition = "2021"
+authors = ["Databend Authors <opensource@datafuselabs.com>"]
+license = "Apache-2.0"
+publish = false
+
+[dependencies]
+arrow-schema = { workspace = true }
+async-backtrace = { workspace = true }
+async-trait = { workspace = true }
+chrono = { workspace = true }
+databend-common-base = { workspace = true }
+databend-common-catalog = { workspace = true }
+databend-common-exception = { workspace = true }
+databend-common-expression = { workspace = true }
+databend-common-functions = { workspace = true }
+databend-common-meta-app = { workspace = true }
+databend-common-meta-types = { workspace = true }
+databend-common-pipeline-core = { workspace = true }
+databend-common-storage = { workspace = true }
+databend-common-storages-parquet = { workspace = true }
+databend-storages-common-pruner = { workspace = true }
+databend-storages-common-table-meta = { workspace = true }
+iceberg = { git = "https://github.com/apache/iceberg-rust", package = "iceberg", rev = "c3b5364" }
+iceberg-catalog-hms = { git = "https://github.com/apache/iceberg-rust", package = "iceberg-catalog-hms", rev = "c3b5364" }
+iceberg-catalog-rest = { git = "https://github.com/apache/iceberg-rust", package = "iceberg-catalog-rest", rev = "c3b5364" }
+match-template = { workspace = true }
+minitrace = { workspace = true }
+parquet = { workspace = true }
+serde = { workspace = true }
+tokio = { workspace = true }
+typetag = { workspace = true }
+
+[lints]
+workspace = true
+
+[package.metadata.cargo-machete]
+ignored = ["match-template"]

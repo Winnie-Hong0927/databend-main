@@ -1,0 +1,69 @@
+[package]
+name = "databend-common-base"
+version = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+publish = { workspace = true }
+edition = { workspace = true }
+
+[lib]
+doctest = false
+test = true
+
+[features]
+tracing = ["tokio/tracing"]
+jemalloc = []
+disable_initial_exec_tls = ["tikv-jemalloc-sys/disable_initial_exec_tls"]
+memory-profiling = [
+    "tikv-jemalloc-sys/stats",
+    "tikv-jemalloc-sys/profiling",
+    "tikv-jemalloc-sys/unprefixed_malloc_on_supported_platforms",
+]
+
+[dependencies]
+async-backtrace = { workspace = true }
+async-trait = { workspace = true }
+bytesize = "1.1.0"
+ctrlc = { version = "3.2.3", features = ["termination"] }
+databend-common-exception = { workspace = true }
+enquote = "1.1.0"
+futures = { workspace = true }
+libc = "0.2.133"
+log = { workspace = true }
+logcall = { workspace = true }
+minitrace = { workspace = true }
+num_cpus = "1.13.1"
+once_cell = { workspace = true }
+parking_lot = { workspace = true }
+pin-project-lite = "0.2.9"
+pprof = { version = "0.11.1", features = [
+    "flamegraph",
+    "protobuf-codec",
+    "protobuf",
+] }
+prometheus-client = { workspace = true }
+prometheus-parse = "0.2.3"
+regex = { workspace = true }
+replace_with = "0.1.7"
+semver = { workspace = true }
+serde = { workspace = true }
+state = "0.5"
+tikv-jemalloc-ctl = { workspace = true }
+tikv-jemalloc-sys = "0.5.2"
+tokio = { workspace = true }
+unicode-segmentation = "1.10.1"
+uuid = { workspace = true }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+procfs = { version = "^0.16" }
+
+[dev-dependencies]
+anyerror = { workspace = true }
+anyhow = { workspace = true }
+rand = { workspace = true }
+
+[build-dependencies]
+databend-common-building = { workspace = true }
+
+[lints]
+workspace = true

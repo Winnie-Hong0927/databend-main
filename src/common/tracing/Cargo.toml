@@ -1,0 +1,38 @@
+[package]
+name = "databend-common-tracing"
+version = { workspace = true }
+authors = { workspace = true }
+license = { workspace = true }
+publish = { workspace = true }
+edition = { workspace = true }
+
+[lib]
+doctest = false
+test = true
+
+[dependencies]
+backtrace = { workspace = true }
+chrono = { workspace = true }
+color-backtrace = { version = "0.6" }
+databend-common-base = { workspace = true }
+databend-common-exception = { workspace = true }
+defer = "0.2"
+fern = "0.6.2"
+itertools = { workspace = true }
+libc = "0.2.143"
+log = { workspace = true }
+minitrace = { workspace = true }
+minitrace-opentelemetry = { workspace = true }
+opentelemetry = { workspace = true }
+opentelemetry-otlp = { workspace = true }
+opentelemetry_sdk = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+strip-ansi-escapes = "0.2"
+tonic = { workspace = true }
+tracing-appender = { workspace = true }
+
+[dev-dependencies]
+
+[lints]
+workspace = true

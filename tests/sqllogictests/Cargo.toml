@@ -1,0 +1,34 @@
+[package]
+authors = ["Databend Authors <opensource@datafuselabs.com>"]
+categories = ["command-line-utilities", "development-tools::build-utils"]
+description = "Databend-Sqllogictests is a testing tool to verify the correctness of Databend."
+edition = "2021"
+keywords = ["sqllogictest"]
+license = "Apache-2.0"
+name = "databend-sqllogictests"
+readme = "README.md"
+repository = "https://github.com/datafuselabs/databend/"
+version = "0.1.0"
+
+[[bin]]
+name = "databend-sqllogictests"
+
+[dependencies]
+async-trait = { workspace = true }
+clap = { workspace = true }
+databend-common-exception = { workspace = true }
+env_logger = "0.10.0"
+futures-util = { workspace = true }
+mysql_async = { workspace = true }
+rand = { workspace = true }
+regex = { workspace = true }
+reqwest = { workspace = true }
+serde = "1.0.150"
+serde_json = { workspace = true }
+sqllogictest = "0.19.1"
+thiserror = { workspace = true }
+tokio = { workspace = true }
+walkdir = { workspace = true }
+
+[lints]
+workspace = true

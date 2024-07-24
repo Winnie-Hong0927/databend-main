@@ -1,0 +1,66 @@
+statement ok
+DROP DATABASE IF EXISTS db_bitmap
+
+statement ok
+CREATE DATABASE db_bitmap
+
+statement ok
+USE db_bitmap
+
+statement ok
+CREATE TABLE IF NOT EXISTS t1(id Int, v Bitmap) Engine = Fuse
+
+statement ok
+INSERT INTO t1 (id, v) VALUES(1, to_bitmap('0, 1')),(2, to_bitmap('1, 2')),(3, to_bitmap('3, 4'))
+
+statement ok
+INSERT INTO t1 (id, v) VALUES(4, '5, 6'),(5, '7, 8'),(6, '9, 10')
+
+query IT
+SELECT id, to_string(v) FROM t1 order by id
+----
+1 0,1
+2 1,2
+3 3,4
+4 5,6
+5 7,8
+6 9,10
+
+# test repeat_default of bitmap
+# a block with all value null will not be really read, so use compact to force use of repeat_default
+statement ok
+insert into t1 select number + 7, null from numbers(3);
+
+statement ok
+optimize table t1 compact
+
+query IT
+SELECT id, to_variant(v) FROM t1 order by id
+----
+1 [0,1]
+2 [1,2]
+3 [3,4]
+4 [5,6]
+5 [7,8]
+6 [9,10]
+7 NULL
+8 NULL
+9 NULL
+
+statement ok
+CREATE TABLE IF NOT EXISTS t2(a int not null, b bitmap not null) Engine = Fuse
+
+statement error 1006
+insert into t2 (a) values (1),(2);
+
+statement ok
+insert into t2 (a,b) values (1,to_bitmap('0')),(2,to_bitmap('1'));
+
+query IT
+SELECT a, to_string(b) FROM t2
+----
+1 0
+2 1
+
+statement ok
+DROP DATABASE db_bitmap
