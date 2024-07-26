@@ -576,7 +576,7 @@ pub trait VisitorMut: Sized {
     fn visit_show_dictionaries(&mut self, _show_options: &mut Option<ShowOptions>) {}
 
     fn visit_create_view(&mut self, _stmt: &mut CreateViewStmt) {}
-    
+
     fn visit_alter_view(&mut self, _stmt: &mut AlterViewStmt) {}
 
     fn visit_drop_view(&mut self, _stmt: &mut DropViewStmt) {}

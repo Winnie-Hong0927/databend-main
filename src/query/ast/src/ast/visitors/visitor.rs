@@ -65,10 +65,7 @@ pub trait Visitor<'ast>: Sized {
         walk_identifier(self, table);
     }
 
-    fn visit_dictionary_ref(
-        &mut self,
-        dictionary_name: &'ast Identifier,
-    ) {
+    fn visit_dictionary_ref(&mut self, dictionary_name: &'ast Identifier) {
         walk_identifier(self, dictionary_name);
     }
 
@@ -562,11 +559,7 @@ pub trait Visitor<'ast>: Sized {
 
     fn visit_exists_table(&mut self, _stmt: &'ast ExistsTableStmt) {}
 
-    fn visit_create_dictionary(&mut self, stmt: &'ast CreateDictionaryStmt) {
-        // if let Some(query) = stmt.as_query.as_deref() {
-        //     self.visit_query(query)
-        // }
-    }
+    fn visit_create_dictionary(&mut self, _stmt: &'ast CreateDictionaryStmt) {}
 
     fn visit_drop_dictionary(&mut self, _stmt: &'ast DropDictionaryStmt) {}
 

@@ -542,9 +542,9 @@ impl Display for Statement {
             Statement::VacuumTemporaryFiles(stmt) => write!(f, "{stmt}")?,
             Statement::AnalyzeTable(stmt) => write!(f, "{stmt}")?,
             Statement::ExistsTable(stmt) => write!(f, "{stmt}")?,
-            Statement::CreateDictionary(stmt) => write!(f,"{stmt}")?,
-            Statement::DropDictionary(stmt) => write!(f,"{stmt}")?,
-            Statement::ShowCreateDictionary(stmt) => write!(f,"{stmt}")?,
+            Statement::CreateDictionary(stmt) => write!(f, "{stmt}")?,
+            Statement::DropDictionary(stmt) => write!(f, "{stmt}")?,
+            Statement::ShowCreateDictionary(stmt) => write!(f, "{stmt}")?,
             Statement::ShowDictionaries { show_options } => {
                 write!(f, "SHOW DICTIONARIES")?;
                 if let Some(show_options) = show_options {

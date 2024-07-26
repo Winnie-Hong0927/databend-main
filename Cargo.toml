@@ -4,6 +4,7 @@ authors = ["Databend Authors <opensource@datafuselabs.com>"]
 license = "Apache-2.0"
 publish = false
 edition = "2021"
+#![feature(diagnostic_namespace)]
 
 [workspace]
 resolver = "2"

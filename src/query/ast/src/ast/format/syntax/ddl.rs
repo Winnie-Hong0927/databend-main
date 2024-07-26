@@ -24,13 +24,13 @@ use crate::ast::AddColumnOption;
 use crate::ast::AlterTableAction;
 use crate::ast::AlterTableStmt;
 use crate::ast::AlterViewStmt;
+use crate::ast::CreateDictionaryStmt;
 use crate::ast::CreateOption;
 use crate::ast::CreateStreamStmt;
 use crate::ast::CreateTableSource;
 use crate::ast::CreateTableStmt;
 use crate::ast::CreateViewStmt;
 use crate::ast::TimeTravelPoint;
-use crate::ast::CreateDictionaryStmt;
 
 pub(crate) fn pretty_create_table(stmt: CreateTableStmt) -> RcDoc<'static> {
     RcDoc::text("CREATE")
@@ -427,22 +427,52 @@ pub(crate) fn pretty_create_dictionary(stmt: CreateDictionaryStmt) -> RcDoc<'sta
             CreateOption::CreateOrReplace => RcDoc::nil(),
         })
         .append(RcDoc::space().append(RcDoc::text(stmt.dictionary_name.to_string())))
-        //中间应该还差一个 pub columns: Vec<ColumnDefinition>,的写入，这个具体实现在想想
-        //.append(
-        //     interweave_comma(
-        //         stmt.columns
-        //             .iter()
-        //             .map(|column| RcDoc::text(column.to_string())),
-        //     )
-        //     .group(),
-        // )//感觉不太对
-        //还有剩下的几个字段再好好想想
-        // .append(if !stmt.primary_keys.is_empty()) {
-        //     RcDoc::line()
-        //         .append(RcDoc::text("PRIMARY KEY "))
-        //         .append(parenthesized(
-        //             interweave_comma(stmt.primary_keys.into_iter().map(f)).group(),
-        //         ))
-        // }
+        .append(
+            interweave_comma(
+                stmt.columns
+                    .iter()
+                    .map(|column| RcDoc::text(column.to_string())),
+            )
+            .group(),
+        )
+        .append(if !stmt.primary_keys.is_empty() {
+            RcDoc::line()
+                .append(RcDoc::text("PRIMARY KEY "))
+                .append(parenthesized(
+                    interweave_comma(
+                        stmt.primary_keys
+                            .iter()
+                            .map(|k| -> RcDoc<'static> { RcDoc::text(k.to_string()) }),
+                    )
+                    .group(),
+                ))
+        } else {
+            RcDoc::nil()
+        })
+        .append(RcDoc::text("SOURCE "))
+        .append(RcDoc::text(stmt.source_name.to_string()))
+        .append(if !stmt.source_options.is_empty() {
+            RcDoc::line()
+                .append(interweave_comma(stmt.source_options.iter().map(
+                    |(k, v)| {
+                        RcDoc::text(k.clone())
+                            .append(RcDoc::space())
+                            // .append(RcDoc::text("="))
+                            // .append(RcDoc::space())
+                            .append(RcDoc::text("'"))
+                            .append(RcDoc::text(v.clone()))
+                            .append(RcDoc::text("'"))
+                    },
+                )))
+                .group()
+        } else {
+            RcDoc::nil()
+        })
+        .append(if !stmt.comment.is_empty() {
+            RcDoc::line()
+                .append(RcDoc::text("COMMENT "))
+                .append(RcDoc::text(stmt.comment.to_string()))
+        } else {
+            RcDoc::nil()
+        })
 }
-
